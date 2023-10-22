@@ -66,7 +66,7 @@ Please keep your API key confidential and do not share it publicly. If you plan 
 
 ## Deployment on AWS
 
-This application is hosted on Amazon Web Services (AWS). You can  refer the gif video by visiting the following URL: [Your AWS Deployment URL][(https://your-aws-deployment-url).](https://www.veed.io/view/3408e84c-a536-4cb6-bd73-3f184d773539)]
+This application is hosted on Amazon Web Services (AWS). You can  refer the gif video by visiting the following URL: [GIF[(https://www.veed.io/view/3408e84c-a536-4cb6-bd73-3f184d773539)]
 
 ## Video Demo
 
