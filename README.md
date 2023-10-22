@@ -66,13 +66,13 @@ Please keep your API key confidential and do not share it publicly. If you plan 
 
 ## Deployment on AWS
 
-This application is hosted on Amazon Web Services (AWS). You can  refer the gif video by visiting the following URL: [GIF[(https://www.veed.io/view/3408e84c-a536-4cb6-bd73-3f184d773539)]
+This application is hosted on Amazon Web Services (AWS). You can  refer the gif video by visiting the following URL: GIF:(https://www.veed.io/view/3408e84c-a536-4cb6-bd73-3f184d773539)
 
 ## Video Demo
 
 To get a detailed demonstration of how this project works, watch our video  on YouTube:
 
-[Watch the Video Demo on YouTube](https://youtube.com/your-video-url)](https://youtu.be/B2T6hgMn_y8)
+[Watch the Video Demo on YouTube](https://youtu.be/B2T6hgMn_y8)
 
 Don't forget to like and subscribe to our YouTube channel for more exciting content!
 
