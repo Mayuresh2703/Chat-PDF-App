@@ -72,7 +72,7 @@ This application is hosted on Amazon Web Services (AWS). You can  refer the gif 
 
 To get a detailed demonstration of how this project works, watch our video  on YouTube:
 
-[Watch the Video Demo on YouTube](https://youtu.be/B2T6hgMn_y8)
+[TO Watch the Video Demo on YouTube Click Here](https://youtu.be/B2T6hgMn_y8)
 
 Don't forget to like and subscribe to our YouTube channel for more exciting content!
 
