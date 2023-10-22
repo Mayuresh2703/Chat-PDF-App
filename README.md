@@ -28,7 +28,7 @@ Follow these steps to set up and run the LLM Chat App on your own system:
 
 1. Clone this repository using the following command:
    ```sh
-   git clone [https://github.com/your-username/your-repo.git](https://github.com/Mayuresh2703/Chat-PDF-App)
+   git clone https://github.com/Mayuresh2703/Chat-PDF-App
 
 2. Install the required Python packages using:
     ```sh
