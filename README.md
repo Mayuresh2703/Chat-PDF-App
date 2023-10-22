@@ -4,15 +4,15 @@
 A chatbot application that uses OpenAI's language model to answer questions about PDF documents
 
 ## Technologies Used
- - [Streamlit]: The user interface is built with Streamlit, making it easy to create web apps with Python.
+  **Streamlit**: The user interface is built with Streamlit, making it easy to create web apps with Python.
 
- - [LangChain]: LangChain is used for text processing, text splitting, and handling embeddings.
+  **LangChain**: LangChain is used for text processing, text splitting, and handling embeddings.
 
- - [OpenAI LLM]: The application integrates with OpenAI's powerful LLM model for natural language processing and understanding.
+  **OpenAI LLM**: The application integrates with OpenAI's powerful LLM model for natural language processing and understanding.
 
 
 ## Features
- - [Document Upload]: Users can upload PDF documents, and the app extracts text from them for further analysis.
+  **Document Upload**: Users can upload PDF documents, and the app extracts text from them for further analysis.
 
  - [Text Chunking]: The extracted text is divided into manageable text chunks, allowing for efficient processing.
 
