@@ -1,103 +1,97 @@
-import streamlit as st
-from dotenv import load_dotenv
-import pickle
 import os
+import streamlit as st
 from PyPDF2 import PdfReader
-from streamlit_extras.add_vertical_space import add_vertical_space
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.embeddings.openai import OpenAIEmbeddings
-from langchain.vectorstores import FAISS
-from langchain.chains import ConversationalRetrievalChain
 from langchain.llms import OpenAI
+from langchain.vectorstores import FAISS
+from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain.text_splitter import CharacterTextSplitter
+from langchain.chains import ConversationalRetrievalChain
 
-# Load environment variables
-load_dotenv()
-
-def create_new_chat_session():
-    # Function to create a new chat session and set it as active
-    chat_id = len(st.session_state.chat_sessions) + 1
-    session_key = f"Chat {chat_id}"
-    st.session_state.chat_sessions[session_key] = []
-    st.session_state.active_session = session_key
-
-def initialize_chat_ui():
-    if "active_session" in st.session_state:
-        for message in st.session_state.chat_sessions[st.session_state.active_session]:
-            with st.chat_message(message["role"]):
-                st.markdown(message["content"])
-
-    return st.chat_input("Ask your questions from PDF ")
-
-def main():
-    st.sidebar.title('LLM Chat App with PDF - Chat History and New Chat Button')
-    add_vertical_space(1)
-    st.sidebar.write('Made by [Mayuresh] (https://github.com/Mayuresh2703)')
-    add_vertical_space(2)
+with st.sidebar:
+    st.title('PDF Based Chatbot')
+    st.markdown("## Conversation History: ")
 
     if "chat_sessions" not in st.session_state:
         st.session_state.chat_sessions = {}
 
-    if "active_session" not in st.session_state:
-        create_new_chat_session()
-
     # New Chat button
-    if st.sidebar.button("New Chat"):
-        create_new_chat_session()
+    if "active_session" not in st.session_state or st.sidebar.button("New Chat +", use_container_width=True):
+        # Create a new chat session and set it as active
+        chat_id = len(st.session_state.chat_sessions) + 1
+        session_key = f"Chat {chat_id}"
+        st.session_state.chat_sessions[session_key] = []
+        st.session_state.active_session = session_key
 
     # Buttons for previous chat sessions
     for session in st.session_state.chat_sessions:
-        if st.sidebar.button(session, key=session):  # Added a unique key
+        if st.sidebar.button(session, key=session):
             st.session_state.active_session = session
+    st.markdown('''
+    ## About App:
 
-    st.header("Chat with PDF APP")
+    This app is an LLM powered chatbot  using:
 
-    # PDF upload and processing
-    pdf = st.file_uploader("Upload your PDF", type='pdf')
+    - [Streamlit](https://streamlit.io/)
+    - [Langchain](https://docs.langchain.com/docs/)
+    - [OpenAI](https://openai.com/)
 
-    if pdf is not None:
-        pdf_reader = PdfReader(pdf)
-        text = ""
-        for page in pdf_reader.pages:
-            text += page.extract_text()
+    ## About me:
 
-        text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=1000,
-            chunk_overlap=200,
-            length_function=len
-        )
-        chunks = text_splitter.split_text(text=text)
+    - [Github](https://github.com/Mayuresh2703)
 
-        store_name = pdf.name[:-4]
-        st.write(f'{store_name}')
+    ''')
+    st.write("Made by [Mayuresh]")
 
-        if os.path.exists(f"{store_name}.pkl"):
-            with open(f"{store_name}.pkl", "rb") as f:
-                vectorstore = pickle.load(f)
-        else:
+def main():
+    api_key = st.text_input("Enter your OpenAI API Key", type="password")
+    if api_key:
+        os.environ["OPENAI_API_KEY"] = api_key
+
+        st.header("Chat with your PDF File")
+
+        # PDF upload and processing
+        pdf = st.file_uploader("Upload your PDF:", type='pdf')
+
+        # extract the text
+        if pdf is not None:
+            pdf_reader = PdfReader(pdf)
+            text = ""
+            for page in pdf_reader.pages:
+                text += page.extract_text()
+
+            # split text into chunks
+            text_splitter = CharacterTextSplitter(separator="\n", chunk_size=1000, chunk_overlap=200)
+            chunks = text_splitter.split_text(text)
+
+            # Open AI embeddings and vector store 
             embeddings = OpenAIEmbeddings()
-            vectorstore = FAISS.from_texts(chunks, embedding=embeddings)
-            with open(f"{store_name}.pkl", "wb") as f:
-                pickle.dump(vectorstore, f)
+            vector_store = FAISS.from_texts(chunks, embedding=embeddings)
 
-        # Chat UI and processing
-        llm = OpenAI(temperature=0, max_tokens=1000)
-        qa = ConversationalRetrievalChain.from_llm(llm, vectorstore.as_retriever())
-        prompt = initialize_chat_ui()
+            # Open AI LLM and initializing a Conversation Chain using langchain
+            llm = OpenAI(temperature=0)
+            qa_chain = ConversationalRetrievalChain.from_llm(llm, vector_store.as_retriever())
 
-        if prompt:
-            st.session_state.chat_sessions[st.session_state.active_session].append({"role": "user", "content": prompt})
-            with st.chat_message("user"):
-                st.markdown(prompt)
+            if "active_session" in st.session_state:
+                for message in st.session_state.chat_sessions[st.session_state.active_session]:
+                    role = message["role"]
+                    content = message["content"]
+                    st.text(f"{role}: {content}")
 
-            result = qa({"question": prompt, "chat_history": [(message["role"], message["content"]) for message in
-                                                              st.session_state.chat_sessions[
-                                                                  st.session_state.active_session]]})
-            full_response = result["answer"]
+            # Read user input prompt
+            query = st.text_input("Ask your questions from PDF ")
 
-            with st.chat_message("assistant"):
-                st.markdown(full_response)
-            st.session_state.chat_sessions[st.session_state.active_session].append(
-                {"role": "assistant", "content": full_response})
+            if query:
+                # using chat message to initiate User conversation
+                st.session_state.chat_sessions[st.session_state.active_session].append({"role": "user", "content": query})
+                st.text(f"user: {query}")
+
+                # Generate response using qa chain with the help of query and previous messages
+                result = qa_chain({"question": query, "chat_history": [(message["role"], message["content"]) for message in st.session_state.chat_sessions[st.session_state.active_session]]})
+                response = result["answer"]
+
+                # using chat message to initiate Bot conversation
+                st.session_state.chat_sessions[st.session_state.active_session].append({"role": "assistant", "content": response})
+                st.text(f"assistant: {response}")
 
 if __name__ == '__main__':
     main()
