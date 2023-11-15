@@ -68,7 +68,7 @@ Please keep your API key confidential and do not share it publicly. If you plan 
 
 1.This application is hosted on Amazon Web Services (AWS). You can  refer the gif video by visiting the following URL: GIF:(https://www.veed.io/view/3408e84c-a536-4cb6-bd73-3f184d773539)
 
-2. This application is hosted on Streamlit.Link -> https://chat-pdf-app-aurv438bxqyp23v6zryrz9.streamlit.app/
+2. This application is hosted on Streamlit Cloud.Link -> https://chat-pdf-app-aurv438bxqyp23v6zryrz9.streamlit.app/
 ## Video Demo
 
 To get a detailed demonstration of how this project works, watch our video  on YouTube:
